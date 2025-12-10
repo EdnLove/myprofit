@@ -2,8 +2,16 @@
 
 @theme {
   --color-bg: #050505;
-  --font-sans: 'Inter', 'system-ui', 'sans-serif';
+  /* Add Noto Sans SC to the font stack */
+  --font-sans: 'Inter', 'Noto Sans SC', 'system-ui', 'sans-serif';
   --font-mono: 'JetBrains Mono', 'monospace';
+
+  --animate-shine: shine 1.5s ease-out;
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
 }
 
 :root {
@@ -15,6 +23,8 @@ body {
   background-color: var(--color-bg);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom Scrollbar */
