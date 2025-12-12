@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { resumeData } from './data/resumeData';
 import IdentityScene from './components/IdentityScene';
-import GlassCard from './components/GlassCard';
+import { BentoGrid } from './components/BentoGrid';
+import BentoCard from './components/BentoCard';
 import VerificationModal from './components/VerificationModal';
 import ScrollProgress from './components/ScrollProgress';
-import MouseSpotlight from './components/MouseSpotlight';
-import { StaggerContainer, StaggerItem } from './components/StaggerAnimation';
 import TypewriterText from './components/TypewriterText';
-import { Mail, Phone, Globe, Lock, GraduationCap, Award, Briefcase, BookOpen, Heart } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Phone, Globe, Lock, ArrowRight, Star, Cpu, Award } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 function App() {
   const [lang, setLang] = useState('cn');
@@ -18,266 +17,198 @@ function App() {
   const t = resumeData[lang];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-gray-200 font-sans selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-black text-[#f5f5f7] selection:bg-[#2997ff] selection:text-white pb-20">
       <ScrollProgress />
-      <MouseSpotlight />
 
-      {/* Background Gradients */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-900/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-40 bg-black/50 backdrop-blur-lg border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
-          <span className="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-            RESUME
+      {/* Navbar (Glass Strip) */}
+      <nav className="fixed top-0 w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex justify-between items-center">
+          <span className="font-semibold tracking-tight text-sm text-gray-400">
+             Yan Yuqi <span className="text-[#2997ff]">.Pro</span>
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6 text-xs font-medium">
             <button
               onClick={() => setLang('cn')}
-              className={`text-sm font-medium transition-colors ${lang === 'cn' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+              className={`transition-colors ${lang === 'cn' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
             >
               中文
             </button>
-            <span className="text-gray-700">/</span>
             <button
               onClick={() => setLang('en')}
-              className={`text-sm font-medium transition-colors ${lang === 'en' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+              className={`transition-colors ${lang === 'en' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
             >
-              EN
+              English
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="relative pt-24 pb-20 px-6 max-w-6xl mx-auto space-y-20">
+      {/* Main Container */}
+      <main className="pt-24 space-y-6">
 
-        {/* Hero Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1 space-y-8 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="text-sm mb-2 tracking-widest uppercase h-6">
-                <TypewriterText text={t.hero.role} delay={0.5} />
-              </div>
+        {/* HERO GRID */}
+        <BentoGrid>
+          {/* 1. Identity Card (Large, 2x2) */}
+          <BentoCard colSpan={2} rowSpan={2} className="min-h-[500px] flex flex-col justify-between p-0">
+             <div className="absolute inset-0 z-0">
+               <IdentityScene
+                  isLocked={isLocked}
+                  text={isLocked ? "LOCKED" : "YAN YUQI"}
+               />
+             </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-4">
-                {isLocked ? (
-                  <span className="flex items-center gap-4 text-gray-500">
-                    {t.hero.lockedTitle} <Lock size={40} className="animate-bounce" />
-                  </span>
-                ) : (
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400">
-                    {t.hero.unlockedTitle}
-                  </span>
+             {/* Text Overlay */}
+             <div className="relative z-10 mt-auto p-8 bg-gradient-to-t from-black via-black/50 to-transparent">
+                <div className="text-[#2997ff] font-medium tracking-wide text-sm mb-2">
+                   <TypewriterText text={t.hero.role} delay={0.5} />
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+                  {isLocked ? t.hero.lockedTitle : t.hero.unlockedTitle}
+                </h1>
+
+                {isLocked && (
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="flex items-center gap-2 bg-[#2997ff] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0077ED] transition-colors"
+                  >
+                    <Lock size={14} /> {t.hero.unlockBtn}
+                  </button>
                 )}
-              </h1>
-            </motion.div>
+             </div>
+          </BentoCard>
 
-            {/* Private Info Block */}
-            <div className="space-y-4">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-500 ${isLocked ? 'bg-red-900/10 border-red-500/20' : 'bg-blue-900/10 border-blue-500/20 shadow-lg shadow-blue-500/10'}`}
-              >
-                <Phone size={20} className={isLocked ? 'text-red-400' : 'text-blue-400'} />
-                <span className={`font-mono text-lg ${isLocked ? 'blur-sm select-none text-gray-500' : 'text-white'}`}>
-                  {isLocked ? '188-****-****' : t.hero.phone}
-                </span>
-              </motion.div>
-              <motion.div
-                 whileHover={{ scale: 1.02 }}
-                 className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-500 ${isLocked ? 'bg-red-900/10 border-red-500/20' : 'bg-blue-900/10 border-blue-500/20 shadow-lg shadow-blue-500/10'}`}
-              >
-                <Mail size={20} className={isLocked ? 'text-red-400' : 'text-blue-400'} />
-                <span className={`font-mono text-lg ${isLocked ? 'blur-sm select-none text-gray-500' : 'text-white'}`}>
-                  {isLocked ? '****@qq.com' : t.hero.email}
-                </span>
-              </motion.div>
-            </div>
+          {/* 2. Intro Card (1x1) */}
+          <BentoCard colSpan={1} rowSpan={1} className="p-8 bg-[#1d1d1f]">
+             <Globe className="text-[#2997ff] mb-4" size={28} />
+             <h3 className="text-xl font-bold mb-2">{t.sections.intro}</h3>
+             <p className="text-gray-400 text-sm leading-relaxed line-clamp-6">
+               {t.introText}
+             </p>
+          </BentoCard>
 
-            {isLocked && (
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(255,255,255,0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowModal(true)}
-                className="px-8 py-3 bg-white text-black font-bold rounded-full hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all flex items-center gap-2"
-              >
-                <Lock size={18} /> {t.hero.unlockBtn}
-              </motion.button>
-            )}
-          </div>
+          {/* 3. Stats Card (1x1) */}
+          <BentoCard colSpan={1} rowSpan={1} className="p-8 flex flex-col justify-center items-center text-center bg-[#1d1d1f]">
+             <div className="text-5xl font-bold text-white mb-2">90.06</div>
+             <div className="text-gray-500 text-sm font-medium uppercase tracking-wider">Average GPA</div>
+             <div className="mt-4 px-3 py-1 bg-[#2997ff]/10 text-[#2997ff] rounded-full text-xs font-bold">
+               Rank 3 / 94
+             </div>
+          </BentoCard>
 
-          {/* 3D Scene */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="order-1 lg:order-2 h-[400px] z-20"
-          >
-            <IdentityScene
-                isLocked={isLocked}
-                text={isLocked ? "LOCKED" : (lang === 'cn' ? "YAN YUQI" : "YAN YUQI")}
-            />
-          </motion.div>
-        </section>
-
-        {/* Basic Info & Intro */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Info Grid */}
-            <GlassCard className="col-span-1 md:col-span-2 space-y-6">
-                <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                    <Globe className="text-blue-400" />
-                    <h3 className="text-xl font-bold text-white">{t.sections.basic}</h3>
+          {/* 4. Contact/Privacy Card (Horizontal) */}
+          <BentoCard colSpan={2} rowSpan={1} className="p-8 flex flex-col justify-center bg-[#161617]">
+             <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6">Contact Information</h3>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className={`flex items-center gap-4 ${isLocked ? 'opacity-50 blur-[4px]' : 'opacity-100'}`}>
+                   <div className="w-10 h-10 rounded-full bg-[#2997ff]/10 flex items-center justify-center text-[#2997ff]">
+                     <Phone size={18} />
+                   </div>
+                   <div>
+                     <div className="text-xs text-gray-500">Mobile</div>
+                     <div className="text-lg font-medium font-mono">{isLocked ? '189-****-****' : t.hero.phone}</div>
+                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-300">
-                    <p><strong className="text-gray-500">Gender:</strong> {t.basicInfo.gender}</p>
-                    <p><strong className="text-gray-500">Born:</strong> {t.basicInfo.birth}</p>
-                    <p><strong className="text-gray-500">Major:</strong> {t.basicInfo.major}</p>
-                    <p><strong className="text-gray-500">Politics:</strong> {t.basicInfo.politics}</p>
-                    <p className="col-span-1 sm:col-span-2"><strong className="text-gray-500">College:</strong> {t.basicInfo.college}</p>
-                    <p className="col-span-1 sm:col-span-2 text-green-400 font-bold">{t.basicInfo.gpa}</p>
+                <div className={`flex items-center gap-4 ${isLocked ? 'opacity-50 blur-[4px]' : 'opacity-100'}`}>
+                   <div className="w-10 h-10 rounded-full bg-[#2997ff]/10 flex items-center justify-center text-[#2997ff]">
+                     <Mail size={18} />
+                   </div>
+                   <div>
+                     <div className="text-xs text-gray-500">Email</div>
+                     <div className="text-lg font-medium font-mono">{isLocked ? '****@qq.com' : t.hero.email}</div>
+                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-4">
-                    {t.basicInfo.honors.map((honor, i) => (
-                        <span key={i} className="px-3 py-1 bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full text-xs hover:bg-yellow-500/20 transition-colors cursor-default">
-                            {honor}
-                        </span>
-                    ))}
-                </div>
-            </GlassCard>
+             </div>
+          </BentoCard>
+        </BentoGrid>
 
-            {/* Intro Text */}
-            <GlassCard delay={0.1} className="col-span-1 flex flex-col justify-center">
-                 <div className="flex items-center gap-3 mb-4">
-                    <Heart className="text-pink-400" />
-                    <h3 className="text-xl font-bold text-white">{t.sections.intro}</h3>
-                </div>
-                <p className="text-gray-400 leading-relaxed text-sm text-justify">
-                    {t.introText}
-                </p>
-            </GlassCard>
-        </section>
+        {/* RESEARCH GRID */}
+        <div className="max-w-7xl mx-auto px-6 mt-12 mb-4">
+           <h2 className="text-3xl font-bold tracking-tight">{t.sections.research}</h2>
+        </div>
 
-        {/* Research */}
-        <section>
-             <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <BookOpen className="text-purple-400" /> {t.sections.research}
-            </h3>
-            <StaggerContainer className="space-y-6">
-                {t.research.map((item, i) => (
-                    <StaggerItem key={i}>
-                        <GlassCard>
-                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
-                                <h4 className="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">{item.title}</h4>
-                                <span className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs font-mono border border-purple-500/20 whitespace-nowrap">
-                                    {item.period}
-                                </span>
-                            </div>
-                            <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
-                        </GlassCard>
-                    </StaggerItem>
-                ))}
-            </StaggerContainer>
-        </section>
+        <BentoGrid>
+           {t.research.map((item, i) => (
+             <BentoCard key={i} colSpan={i === 2 ? 2 : 1} rowSpan={1} className="p-8">
+                <div className="text-xs font-mono text-gray-500 mb-4">{item.period}</div>
+                <h3 className="text-xl font-bold mb-3 leading-snug">{item.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+             </BentoCard>
+           ))}
+        </BentoGrid>
 
-        {/* Competitions */}
-        <section>
-            <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <Award className="text-yellow-400" /> {t.sections.competitions}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <GlassCard>
-                    <h4 className="text-lg font-bold text-yellow-200 mb-4 border-b border-white/10 pb-2">National</h4>
-                    <StaggerContainer className="space-y-3">
-                        {t.competitions.national.map((award, i) => (
-                            <StaggerItem key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                                <span className="text-yellow-500 mt-1">●</span> {award}
-                            </StaggerItem>
-                        ))}
-                    </StaggerContainer>
-                </GlassCard>
-                <div className="space-y-6">
-                    <GlassCard delay={0.1}>
-                        <h4 className="text-lg font-bold text-blue-200 mb-4 border-b border-white/10 pb-2">Provincial</h4>
-                         <StaggerContainer className="space-y-3">
-                            {t.competitions.provincial.slice(0, 5).map((award, i) => (
-                                <StaggerItem key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                                    <span className="text-blue-500 mt-1">●</span> {award}
-                                </StaggerItem>
-                            ))}
-                            {t.competitions.provincial.length > 5 && (
-                                <StaggerItem className="text-xs text-gray-500 italic pl-4">And {t.competitions.provincial.length - 5} more...</StaggerItem>
-                            )}
-                        </StaggerContainer>
-                    </GlassCard>
-                    <GlassCard delay={0.2}>
-                         <h4 className="text-lg font-bold text-green-200 mb-4 border-b border-white/10 pb-2">School</h4>
-                         <StaggerContainer className="space-y-3">
-                            {t.competitions.school.map((award, i) => (
-                                <StaggerItem key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                                    <span className="text-green-500 mt-1">●</span> {award}
-                                </StaggerItem>
-                            ))}
-                        </StaggerContainer>
-                    </GlassCard>
-                </div>
-            </div>
-        </section>
+        {/* AWARDS & SKILLS GRID */}
+        <div className="max-w-7xl mx-auto px-6 mt-12 mb-4">
+           <h2 className="text-3xl font-bold tracking-tight">{t.sections.competitions}</h2>
+        </div>
 
-        {/* Work & Practice */}
-        <section>
-            <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <Briefcase className="text-orange-400" /> {t.sections.work}
-            </h3>
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {t.work.map((job, i) => (
-                    <StaggerItem key={i} className="h-full">
-                        <GlassCard className="h-full">
-                            <h4 className="text-lg font-bold text-white mb-2">{job.title}</h4>
-                            <p className="text-gray-400 text-sm">{job.desc}</p>
-                        </GlassCard>
-                    </StaggerItem>
-                ))}
-            </StaggerContainer>
-        </section>
+        <BentoGrid>
+            {/* Awards List */}
+            <BentoCard colSpan={2} rowSpan={2} className="p-8">
+               <div className="space-y-6">
+                  <div>
+                    <h4 className="flex items-center gap-2 text-[#2997ff] font-bold mb-4">
+                       <Award size={18} /> National
+                    </h4>
+                    <ul className="space-y-3">
+                       {t.competitions.national.map((c, i) => (
+                          <li key={i} className="text-sm text-gray-300 border-b border-white/5 pb-2">{c}</li>
+                       ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="flex items-center gap-2 text-purple-400 font-bold mb-4">
+                       <Star size={18} /> Provincial Highlight
+                    </h4>
+                     <ul className="space-y-3">
+                       {t.competitions.provincial.slice(0, 3).map((c, i) => (
+                          <li key={i} className="text-sm text-gray-300 border-b border-white/5 pb-2">{c}</li>
+                       ))}
+                    </ul>
+                  </div>
+               </div>
+            </BentoCard>
 
-        {/* Volunteers & Ideology */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-             <GlassCard className="col-span-1 md:col-span-2">
-                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <Heart className="text-red-400" /> {t.sections.volunteer}
-                </h3>
-                <StaggerContainer className="space-y-2">
-                    {t.volunteers.map((v, i) => (
-                        <StaggerItem key={i} className="text-sm text-gray-300 py-1 border-b border-white/5 last:border-0 hover:text-white transition-colors">
-                            {v}
-                        </StaggerItem>
-                    ))}
-                </StaggerContainer>
-             </GlassCard>
+            {/* Tech Stack / Work */}
+            <BentoCard colSpan={1} rowSpan={2} className="p-8 bg-[#161617]">
+               <h3 className="text-lg font-bold mb-6">{t.sections.work}</h3>
+               <div className="space-y-8 relative">
+                  {/* Timeline Line */}
+                  <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-[#333]"></div>
 
-             <GlassCard delay={0.1} className="col-span-1 bg-gradient-to-br from-red-900/10 to-transparent">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <GraduationCap className="text-red-400" /> {t.sections.ideology}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed text-justify">
-                    {t.ideology}
-                </p>
-             </GlassCard>
-        </section>
+                  {t.work.map((w, i) => (
+                    <div key={i} className="relative pl-8">
+                       <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full bg-[#1d1d1f] border-2 border-[#2997ff]"></div>
+                       <h4 className="text-sm font-bold text-white mb-1">{w.title}</h4>
+                       <p className="text-xs text-gray-500 leading-relaxed">{w.desc}</p>
+                    </div>
+                  ))}
+               </div>
+            </BentoCard>
 
-        <footer className="text-center text-gray-600 text-sm py-8 border-t border-white/5">
-            <p>DESIGNED & BUILT BY YAN YUQI © 2025</p>
-            <p className="text-xs mt-2 opacity-50">Powered by React, Three.js & Tailwind CSS</p>
+            {/* Volunteer */}
+            <BentoCard colSpan={1} rowSpan={1} className="p-8 flex flex-col justify-between">
+               <div>
+                  <h3 className="text-lg font-bold mb-2">{t.sections.volunteer}</h3>
+                  <div className="text-4xl font-bold text-[#2997ff]">150h+</div>
+                  <div className="text-xs text-gray-500">Total Service Hours</div>
+               </div>
+               <div className="mt-4 text-xs text-gray-400">
+                  {t.volunteers[0]}
+               </div>
+            </BentoCard>
+
+            <BentoCard colSpan={1} rowSpan={1} className="p-8 flex items-center justify-center bg-[#2997ff] group cursor-pointer">
+               <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                  <div className="text-white font-bold text-lg mb-1">Download PDF</div>
+                  <div className="text-white/70 text-xs">Full Resume</div>
+               </div>
+            </BentoCard>
+
+        </BentoGrid>
+
+        <footer className="text-center text-gray-600 text-xs py-12">
+            <p>Designed by Yan Yuqi. Inspired by Apple.</p>
         </footer>
-
       </main>
 
       {/* Modal */}
