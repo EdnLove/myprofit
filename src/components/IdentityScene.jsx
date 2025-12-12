@@ -22,7 +22,7 @@ const TitaniumText = ({ text, isLocked }) => {
     }
   });
 
-  const fontUrl = 'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json';
+  const fontUrl = '/fonts/helvetiker_bold.typeface.json';
 
   return (
     <group>

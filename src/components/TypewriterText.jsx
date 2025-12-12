@@ -5,17 +5,27 @@ const TypewriterText = ({ text, delay = 0 }) => {
   const [displayedText, setDisplayedText] = useState('');
 
   useEffect(() => {
+    // Reset state when text changes
+    setDisplayedText('');
+
     let index = 0;
     const timeout = setTimeout(() => {
       const interval = setInterval(() => {
-        setDisplayedText((prev) => prev + text.charAt(index));
+        setDisplayedText((prev) => {
+           // Ensure we don't exceed text length
+           if (prev.length >= text.length) return prev;
+           return prev + text.charAt(prev.length);
+        });
         index++;
-        if (index === text.length) clearInterval(interval);
+        if (index >= text.length) clearInterval(interval);
       }, 50); // Speed of typing
+
       return () => clearInterval(interval);
     }, delay * 1000);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [text, delay]);
 
   return (

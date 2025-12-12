@@ -13,12 +13,14 @@ const BentoCard = ({
     1: 'md:col-span-1',
     2: 'md:col-span-2',
     3: 'md:col-span-3',
+    4: 'md:col-span-4',
   };
 
   const rowSpanClasses = {
     1: 'md:row-span-1',
     2: 'md:row-span-2',
     3: 'md:row-span-3',
+    4: 'md:row-span-4',
   };
 
   const spanClass = `${colSpanClasses[colSpan] || 'md:col-span-1'} ${rowSpanClasses[rowSpan] || 'md:row-span-1'}`;
