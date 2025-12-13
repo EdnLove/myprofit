@@ -28,19 +28,31 @@ const BentoCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }} // Apple ease
+      // Updated to a stiff spring for that "Apple" snap feel
+      transition={{
+        type: "spring",
+        stiffness: 150,
+        damping: 20,
+        mass: 1
+      }}
+      whileHover={{
+         scale: 1.02,
+         transition: { duration: 0.2, ease: "easeOut" }
+      }}
+      whileTap={onClick ? { scale: 0.98 } : {}}
       onClick={onClick}
       className={`
         relative overflow-hidden rounded-[30px]
         bg-[var(--color-surface)]
-        group hover:bg-[var(--color-surface-hover)] transition-colors duration-500
+        border border-[var(--color-text-primary)]/5
+        shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5
         flex flex-col
         ${spanClass}
         ${className}
-        ${onClick ? 'cursor-pointer active:scale-[0.98]' : ''}
+        ${onClick ? 'cursor-pointer' : ''}
       `}
     >
       {children}

@@ -38,7 +38,8 @@ const TitaniumText = ({ text, isLocked, isDark }) => {
         <Text3D
           ref={meshRef}
           font={fontUrl}
-          size={isLocked ? 1.2 : 1.8}
+          // Smaller size for unlocked name "YAN YUQI" to ensure fit
+          size={isLocked ? 1.2 : 1.5}
           height={0.1}
           curveSegments={24}
           bevelEnabled
@@ -62,8 +63,11 @@ const TitaniumText = ({ text, isLocked, isDark }) => {
   );
 };
 
-const IdentityScene = ({ isLocked, text }) => {
+const IdentityScene = ({ isLocked }) => {
   const [isDark, setIsDark] = useState(true);
+
+  // Force English text always for 3D view as requested
+  const text = isLocked ? "LOCKED" : "YAN YUQI";
 
   // Detect theme change via DOM class for manual toggle support
   useEffect(() => {
@@ -81,7 +85,7 @@ const IdentityScene = ({ isLocked, text }) => {
 
   return (
     <div className="w-full h-full min-h-[300px] relative cursor-grab active:cursor-grabbing">
-      {/* Moved camera back from 6 to 10 to ensure text fits */}
+      {/* Moved camera back to 10 to ensure full visibility */}
       <Canvas camera={{ position: [0, 0, 10], fov: 35 }}>
         {/* Studio Lighting - Adapts to Light/Dark slightly */}
         <Environment preset="studio" />

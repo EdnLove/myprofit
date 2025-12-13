@@ -11,10 +11,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CryptoJS from 'crypto-js';
 
 function App() {
-  const [lang, setLang] = useState('cn');
+  const [lang, setLang] = useState('en'); // Default to English as requested
   const [isLocked, setIsLocked] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [theme, setTheme] = useState('system'); // 'light' | 'dark' | 'system'
+  const [theme, setTheme] = useState('system');
 
   // Expanded card state
   const [expandedCard, setExpandedCard] = useState(null);
@@ -34,9 +34,7 @@ function App() {
         root.classList.remove('light', 'dark');
 
         if (theme === 'system') {
-            // No class applied, let media query handle it (or apply explicit class if needed by logic)
-            // But our CSS setup uses :root.dark OR media query.
-            // If we remove classes, the media query in CSS takes over.
+           // Let CSS media query handle it
         } else {
             root.classList.add(theme);
         }
@@ -44,7 +42,6 @@ function App() {
 
     applyTheme();
 
-    // Listener for system changes if in system mode
     const handleSystemChange = () => {
         if (theme === 'system') applyTheme();
     };
@@ -83,6 +80,14 @@ function App() {
 
   const openDetail = (content) => {
     setExpandedCard(content);
+  };
+
+  // Helper to count awards
+  const awardCount = {
+    national: t.competitions.national.length,
+    provincial: t.competitions.provincial.length,
+    school: t.competitions.school.length,
+    total: t.competitions.national.length + t.competitions.provincial.length + t.competitions.school.length
   };
 
   return (
@@ -130,7 +135,6 @@ function App() {
              <div className="absolute inset-0 z-0">
                <IdentityScene
                   isLocked={isLocked}
-                  text={isLocked ? "LOCKED" : "YAN YUQI"}
                />
              </div>
 
@@ -232,36 +236,51 @@ function App() {
         </div>
 
         <BentoGrid>
-            {/* Awards List */}
+            {/* Awards List - REFACTORED for "Fullness" */}
             <BentoCard
                 colSpan={2}
                 rowSpan={2}
-                className="p-8"
+                className="p-8 bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-surface-hover)]"
                 onClick={() => openDetail({
                     title: t.sections.competitions,
                     list: [...t.competitions.national, ...t.competitions.provincial, ...t.competitions.school]
                 })}
             >
-               <div className="space-y-6">
+               <div className="h-full flex flex-col justify-between">
                   <div>
-                    <h4 className="flex items-center gap-2 text-[#2997ff] font-bold mb-4">
-                       <Award size={18} /> National
-                    </h4>
-                    <ul className="space-y-3">
-                       {t.competitions.national.map((c, i) => (
-                          <li key={i} className="text-sm text-[var(--color-text-secondary)] border-b border-[var(--color-text-primary)]/5 pb-2">{c}</li>
-                       ))}
-                    </ul>
+                    <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">{t.sections.competitions}</h3>
+                    <div className="text-[var(--color-text-secondary)] text-sm mb-6">
+                        {lang === 'cn' ? '屡获殊荣，卓越表现' : 'Award-winning excellence across disciplines.'}
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="flex items-center gap-2 text-purple-400 font-bold mb-4">
-                       <Star size={18} /> Provincial Highlight
-                    </h4>
-                     <ul className="space-y-3">
-                       {t.competitions.provincial.slice(0, 3).map((c, i) => (
-                          <li key={i} className="text-sm text-[var(--color-text-secondary)] border-b border-[var(--color-text-primary)]/5 pb-2">{c}</li>
-                       ))}
-                    </ul>
+
+                  <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 rounded-2xl bg-[#2997ff]/10 border border-[#2997ff]/20">
+                          <div className="text-3xl font-bold text-[#2997ff]">{awardCount.national}</div>
+                          <div className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mt-1">
+                              {lang === 'cn' ? '国家级奖项' : 'National'}
+                          </div>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+                          <div className="text-3xl font-bold text-purple-400">{awardCount.provincial}</div>
+                          <div className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mt-1">
+                              {lang === 'cn' ? '省级奖项' : 'Provincial'}
+                          </div>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-orange-500/10 border border-orange-500/20">
+                          <div className="text-3xl font-bold text-orange-400">{awardCount.school}</div>
+                          <div className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mt-1">
+                              {lang === 'cn' ? '校级奖项' : 'School'}
+                          </div>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                          <div className="text-center">
+                             <div className="text-3xl font-bold text-emerald-400">{awardCount.total}</div>
+                             <div className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mt-1">
+                                {lang === 'cn' ? '总计获奖' : 'Total Awards'}
+                             </div>
+                          </div>
+                      </div>
                   </div>
                </div>
             </BentoCard>
@@ -283,22 +302,20 @@ function App() {
                </div>
             </BentoCard>
 
-            {/* Volunteer */}
-            <BentoCard colSpan={1} rowSpan={1} className="p-8 flex flex-col justify-between">
+            {/* Volunteer - Expanded to fill the row (colSpan 2) */}
+            <BentoCard colSpan={2} rowSpan={1} className="p-8 flex flex-row items-center justify-between">
                <div>
                   <h3 className="text-lg font-bold mb-2 text-[var(--color-text-primary)]">{t.sections.volunteer}</h3>
-                  <div className="text-4xl font-bold text-[#2997ff]">150h+</div>
-                  <div className="text-xs text-[var(--color-text-secondary)]">Total Service Hours</div>
+                  <div className="flex items-baseline gap-2">
+                     <div className="text-4xl font-bold text-[#2997ff]">150h+</div>
+                     <div className="text-xs text-[var(--color-text-secondary)]">Total Service Hours</div>
+                  </div>
                </div>
-               <div className="mt-4 text-xs text-[var(--color-text-secondary)]">
-                  {t.volunteers[0]}
-               </div>
-            </BentoCard>
-
-            <BentoCard colSpan={1} rowSpan={1} className="p-8 flex items-center justify-center bg-[#2997ff] group cursor-pointer">
-               <div className="text-center group-hover:scale-105 transition-transform duration-300">
-                  <div className="text-white font-bold text-lg mb-1">Download PDF</div>
-                  <div className="text-white/70 text-xs">Full Resume</div>
+               <div className="hidden md:block text-right">
+                   <div className="text-sm text-[var(--color-text-primary)] font-medium mb-1">Community & Impact</div>
+                   <div className="text-xs text-[var(--color-text-secondary)] max-w-[200px]">
+                      {t.volunteers[0]}
+                   </div>
                </div>
             </BentoCard>
 
