@@ -3,34 +3,17 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Text3D, Center, Environment, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-const TitaniumText = ({ text, isLocked, isDark }) => {
+const WireframeText = ({ text }) => {
   const meshRef = useRef();
 
   useFrame((state) => {
     if (meshRef.current) {
       const time = state.clock.elapsedTime;
-      // Gentle floating
-      meshRef.current.position.y = Math.sin(time * 0.3) * 0.05;
-
-      // Subtle Mouse Parallax
-      const targetRotX = -state.mouse.y * 0.2;
-      const targetRotY = state.mouse.x * 0.2;
-
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, targetRotX, 0.05);
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, targetRotY, 0.05);
+      meshRef.current.rotation.y = Math.sin(time * 0.2) * 0.1;
     }
   });
 
   const fontUrl = '/fonts/helvetiker_bold.typeface.json';
-
-  // Material properties based on theme
-  const materialProps = isDark ? {
-    color: isLocked ? "#333" : "#f5f5f7",
-    emissive: isLocked ? "#220000" : "#000",
-  } : {
-    color: isLocked ? "#888" : "#1d1d1f",
-    emissive: "#000",
-  };
 
   return (
     <group>
@@ -38,24 +21,22 @@ const TitaniumText = ({ text, isLocked, isDark }) => {
         <Text3D
           ref={meshRef}
           font={fontUrl}
-          // Smaller size for unlocked name "YAN YUQI" to ensure fit
-          size={isLocked ? 1.2 : 1.5}
-          height={0.1}
-          curveSegments={24}
+          size={1.5}
+          height={0.2}
+          curveSegments={12}
           bevelEnabled
-          bevelThickness={0.03}
+          bevelThickness={0.02}
           bevelSize={0.02}
           bevelOffset={0}
-          bevelSegments={10}
+          bevelSegments={5}
         >
           {text}
-          <meshPhysicalMaterial
-            {...materialProps}
-            roughness={0.2}
-            metalness={1.0}
-            clearcoat={0.5}
-            clearcoatRoughness={0.1}
+          {/* Tech/Cyber Material */}
+          <meshStandardMaterial
+            color="#238636" // GitHub Green
+            emissive="#00ff00"
             emissiveIntensity={0.2}
+            wireframe={true} // Cyber aesthetic
           />
         </Text3D>
       </Center>
@@ -64,51 +45,24 @@ const TitaniumText = ({ text, isLocked, isDark }) => {
 };
 
 const IdentityScene = ({ isLocked }) => {
-  const [isDark, setIsDark] = useState(true);
-
-  // Force English text always for 3D view as requested
+  // Always English
   const text = isLocked ? "LOCKED" : "YAN YUQI";
 
-  // Detect theme change via DOM class for manual toggle support
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
-
-    checkTheme();
-    // Use a mutation observer to watch for class changes on html element
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="w-full h-full min-h-[300px] relative cursor-grab active:cursor-grabbing">
-      {/* Moved camera back to 10 to ensure full visibility */}
+    <div className="w-full h-full min-h-[300px] relative cursor-grab active:cursor-grabbing bg-[#0d1117]">
+       {/* Grid Background Effect */}
+      <div
+        className="absolute inset-0 z-0 opacity-10 pointer-events-none"
+        style={{
+            backgroundImage: 'linear-gradient(#30363d 1px, transparent 1px), linear-gradient(90deg, #30363d 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+        }}
+      ></div>
+
       <Canvas camera={{ position: [0, 0, 10], fov: 35 }}>
-        {/* Studio Lighting - Adapts to Light/Dark slightly */}
-        <Environment preset="studio" />
-
-        <ambientLight intensity={isDark ? 0.5 : 0.8} />
-
-        <spotLight
-          position={[10, 10, 5]}
-          angle={0.3}
-          penumbra={1}
-          intensity={2}
-          color="#ffffff"
-        />
-        <spotLight
-          position={[-10, 0, -5]}
-          angle={0.5}
-          penumbra={1}
-          intensity={2}
-          color="#2997ff"
-        />
-
-        <TitaniumText text={text} isLocked={isLocked} isDark={isDark} />
-
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#00ff00" />
+        <WireframeText text={text} />
         <OrbitControls
           enableZoom={false}
           enablePan={false}

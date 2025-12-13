@@ -28,33 +28,26 @@ const BentoCard = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      // Updated to a stiff spring for that "Apple" snap feel
-      transition={{
-        type: "spring",
-        stiffness: 150,
-        damping: 20,
-        mass: 1
-      }}
-      whileHover={{
-         scale: 1.02,
-         transition: { duration: 0.2, ease: "easeOut" }
-      }}
-      whileTap={onClick ? { scale: 0.98 } : {}}
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.3 }}
       onClick={onClick}
       className={`
-        relative overflow-hidden rounded-[30px]
+        relative overflow-hidden
         bg-[var(--color-surface)]
-        border border-[var(--color-text-primary)]/5
-        shadow-sm hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5
+        border border-[var(--color-surface-hover)]
+        hover:border-[var(--color-text-secondary)]
         flex flex-col
         ${spanClass}
         ${className}
-        ${onClick ? 'cursor-pointer' : ''}
+        ${onClick ? 'cursor-pointer hover:bg-[#1f2428]' : ''}
+        transition-colors duration-200
       `}
     >
+      {/* Optional "Header Bar" decoration for cards */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent opacity-20"></div>
+
       {children}
     </motion.div>
   );

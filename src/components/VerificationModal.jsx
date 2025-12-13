@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, Key } from 'lucide-react';
+import { X, Lock, Terminal, ShieldAlert } from 'lucide-react';
 
 const VerificationModal = ({ isOpen, onClose, onUnlock, lang }) => {
   const [password, setPassword] = useState('');
@@ -14,6 +14,7 @@ const VerificationModal = ({ isOpen, onClose, onUnlock, lang }) => {
     } else {
       setError(true);
       setTimeout(() => setError(false), 500);
+      setPassword('');
     }
   };
 
@@ -24,70 +25,64 @@ const VerificationModal = ({ isOpen, onClose, onUnlock, lang }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm font-mono"
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-[#1a1a1a] border border-white/20 p-8 rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden"
+            exit={{ scale: 0.95, opacity: 0 }}
+            className="bg-[#0c0c0c] border border-green-500/50 p-6 w-full max-w-md shadow-[0_0_20px_rgba(34,197,94,0.2)] relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Glossy header effect */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+            {/* Terminal Window Header */}
+            <div className="flex items-center justify-between mb-6 border-b border-green-500/20 pb-2">
+                <div className="flex items-center gap-2 text-green-500 text-sm">
+                    <Terminal size={14} />
+                    <span>sudo access required</span>
+                </div>
+                <button onClick={onClose} className="text-green-700 hover:text-green-400">
+                    <X size={16} />
+                </button>
+            </div>
 
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="flex flex-col items-center gap-6">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                <Lock className="text-blue-400" size={32} />
+            <div className="space-y-4">
+              <div className="text-gray-300 text-sm">
+                <p className="mb-2">
+                    <span className="text-green-500">root@system:~#</span> access_secure_data --target=contact_info
+                </p>
+                <p className="text-red-400 flex items-center gap-2">
+                    <ShieldAlert size={14} />
+                    PERMISSION DENIED. ELEVATED PRIVILEGES REQUIRED.
+                </p>
               </div>
 
-              <h2 className="text-2xl font-bold text-white tracking-wide">
-                {lang === 'cn' ? '身份验证' : 'Identity Verification'}
-              </h2>
-
-              <p className="text-gray-400 text-center text-sm">
-                {lang === 'cn'
-                  ? '请输入访问密码以查看敏感信息'
-                  : 'Please enter access code to view private info'}
-              </p>
-
-              <form onSubmit={handleSubmit} className="w-full relative">
+              <form onSubmit={handleSubmit} className="mt-6">
                 <div className="relative">
-                    <Key className="absolute left-3 top-3 text-gray-500" size={20} />
+                    <span className="text-green-500 absolute left-3 top-3 text-sm">[sudo] password for yanyuqi:</span>
                     <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="******"
-                    className={`w-full bg-black/40 border ${error ? 'border-red-500' : 'border-white/20'} rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-all text-center tracking-[0.5em] text-lg`}
-                    autoFocus
-                    maxLength={6}
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={`w-full bg-[#161b22] border ${error ? 'border-red-500' : 'border-gray-700'} p-3 pl-[240px] text-white focus:outline-none focus:border-green-500 text-sm font-mono`}
+                        autoFocus
                     />
                 </div>
+
                 {error && (
-                    <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-red-500 text-xs mt-2 text-center absolute -bottom-6 w-full"
-                    >
-                        {lang === 'cn' ? '密码错误 (提示: 123456)' : 'Access Denied (Hint: 123456)'}
-                    </motion.p>
+                    <p className="text-red-500 text-xs mt-2">
+                        Sorry, try again.
+                    </p>
                 )}
 
-                <button
-                  type="submit"
-                  className="w-full mt-8 bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold py-3 rounded-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  {lang === 'cn' ? '解锁' : 'UNLOCK'}
-                </button>
+                <div className="mt-4 flex justify-end">
+                    <button
+                        type="submit"
+                        className="bg-green-600/20 text-green-500 border border-green-500/50 px-4 py-2 text-xs hover:bg-green-600/30 transition-colors uppercase tracking-wider"
+                    >
+                        Authenticate
+                    </button>
+                </div>
               </form>
             </div>
           </motion.div>
