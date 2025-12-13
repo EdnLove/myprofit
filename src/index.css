@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #000000;
-  --color-surface: #1d1d1f;
-  --color-surface-hover: #2d2d2f;
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
   --color-accent: #2997ff;
-  --color-text-primary: #f5f5f7;
-  --color-text-secondary: #86868b;
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Inter", "Noto Sans SC", sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Inter", "Noto Sans SC", sans-serif;
@@ -16,7 +16,25 @@
 }
 
 :root {
-  color-scheme: dark;
+  /* Default Light Mode Variables */
+  --color-bg: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f0f2;
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #86868b;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Variables */
+    --color-bg: #000000;
+    --color-surface: #1d1d1f;
+    --color-surface-hover: #2d2d2f;
+    --color-text-primary: #f5f5f7;
+    --color-text-secondary: #86868b;
+    color-scheme: dark;
+  }
 }
 
 body {
@@ -27,6 +45,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Apple-style Smooth Scroll */
@@ -36,5 +55,5 @@ html {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 0px; /* Hide scrollbar for cleaner look, widely used in Apple sites */
+  width: 0px;
 }

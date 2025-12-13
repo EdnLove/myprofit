@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text3D, Center, Float, Environment, OrbitControls } from '@react-three/drei';
+import { Text3D, Center, Environment, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-const TitaniumText = ({ text, isLocked }) => {
+const TitaniumText = ({ text, isLocked, isDark }) => {
   const meshRef = useRef();
-  const [hovered, setHover] = useState(false);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -24,6 +23,15 @@ const TitaniumText = ({ text, isLocked }) => {
 
   const fontUrl = '/fonts/helvetiker_bold.typeface.json';
 
+  // Material properties based on theme
+  const materialProps = isDark ? {
+    color: isLocked ? "#333" : "#f5f5f7",
+    emissive: isLocked ? "#220000" : "#000",
+  } : {
+    color: isLocked ? "#888" : "#1d1d1f",
+    emissive: "#000",
+  };
+
   return (
     <group>
       <Center>
@@ -32,23 +40,20 @@ const TitaniumText = ({ text, isLocked }) => {
           font={fontUrl}
           size={isLocked ? 1.2 : 1.8}
           height={0.1}
-          curveSegments={24} // Smoother curves
+          curveSegments={24}
           bevelEnabled
           bevelThickness={0.03}
           bevelSize={0.02}
           bevelOffset={0}
-          bevelSegments={10} // High quality bevel
-          onPointerOver={() => setHover(true)}
-          onPointerOut={() => setHover(false)}
+          bevelSegments={10}
         >
           {text}
           <meshPhysicalMaterial
-            color={isLocked ? "#333" : "#f5f5f7"} // Dark grey vs Apple White
-            roughness={0.2}  // Semi-polished
-            metalness={1.0}  // Full metal
-            clearcoat={0.5}  // Clear coat for that "iPhone Pro" glass/metal look
+            {...materialProps}
+            roughness={0.2}
+            metalness={1.0}
+            clearcoat={0.5}
             clearcoatRoughness={0.1}
-            emissive={isLocked ? "#220000" : "#000"}
             emissiveIntensity={0.2}
           />
         </Text3D>
@@ -58,15 +63,26 @@ const TitaniumText = ({ text, isLocked }) => {
 };
 
 const IdentityScene = ({ isLocked, text }) => {
+  const [isDark, setIsDark] = useState(true);
+
+  // Detect theme change
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDark(mediaQuery.matches);
+
+    const handler = (e) => setIsDark(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
   return (
     <div className="w-full h-full min-h-[300px] relative cursor-grab active:cursor-grabbing">
       <Canvas camera={{ position: [0, 0, 6], fov: 35 }}>
-        {/* Studio Lighting */}
+        {/* Studio Lighting - Adapts to Light/Dark slightly */}
         <Environment preset="studio" />
 
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={isDark ? 0.5 : 0.8} />
 
-        {/* Rim Light for that "Pro" product reveal look */}
         <spotLight
           position={[10, 10, 5]}
           angle={0.3}
@@ -79,10 +95,10 @@ const IdentityScene = ({ isLocked, text }) => {
           angle={0.5}
           penumbra={1}
           intensity={2}
-          color="#2997ff" // Subtle Apple Blue rim light
+          color="#2997ff"
         />
 
-        <TitaniumText text={text} isLocked={isLocked} />
+        <TitaniumText text={text} isLocked={isLocked} isDark={isDark} />
 
         <OrbitControls
           enableZoom={false}

@@ -6,7 +6,8 @@ const BentoCard = ({
   className = '',
   colSpan = 1,
   rowSpan = 1,
-  dark = false
+  dark = false,
+  onClick
 }) => {
   // Static mapping for Tailwind classes
   const colSpanClasses = {
@@ -31,13 +32,15 @@ const BentoCard = ({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }} // Apple ease
+      onClick={onClick}
       className={`
         relative overflow-hidden rounded-[30px]
-        ${dark ? 'bg-black' : 'bg-[#1d1d1f]'}
-        group hover:bg-[#2d2d2f] transition-colors duration-500
+        bg-[var(--color-surface)]
+        group hover:bg-[var(--color-surface-hover)] transition-colors duration-500
         flex flex-col
         ${spanClass}
         ${className}
+        ${onClick ? 'cursor-pointer active:scale-[0.98]' : ''}
       `}
     >
       {children}
