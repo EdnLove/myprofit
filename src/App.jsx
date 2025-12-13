@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { resumeData } from './data/resumeData';
 import IdentityScene from './components/IdentityScene';
 import { BentoGrid } from './components/BentoGrid';
@@ -6,7 +6,7 @@ import BentoCard from './components/BentoCard';
 import VerificationModal from './components/VerificationModal';
 import ScrollProgress from './components/ScrollProgress';
 import TypewriterText from './components/TypewriterText';
-import { Mail, Phone, Globe, Lock, ArrowRight, Star, Cpu, Award, X } from 'lucide-react';
+import { Mail, Phone, Globe, Lock, ArrowRight, Star, Cpu, Award, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CryptoJS from 'crypto-js';
 
@@ -14,6 +14,7 @@ function App() {
   const [lang, setLang] = useState('cn');
   const [isLocked, setIsLocked] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [theme, setTheme] = useState('system'); // 'light' | 'dark' | 'system'
 
   // Expanded card state
   const [expandedCard, setExpandedCard] = useState(null);
@@ -24,11 +25,52 @@ function App() {
 
   const t = resumeData[lang];
 
+  // Theme Handling
+  useEffect(() => {
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = () => {
+        root.classList.remove('light', 'dark');
+
+        if (theme === 'system') {
+            // No class applied, let media query handle it (or apply explicit class if needed by logic)
+            // But our CSS setup uses :root.dark OR media query.
+            // If we remove classes, the media query in CSS takes over.
+        } else {
+            root.classList.add(theme);
+        }
+    };
+
+    applyTheme();
+
+    // Listener for system changes if in system mode
+    const handleSystemChange = () => {
+        if (theme === 'system') applyTheme();
+    };
+
+    mediaQuery.addEventListener('change', handleSystemChange);
+    return () => mediaQuery.removeEventListener('change', handleSystemChange);
+  }, [theme]);
+
+  const toggleTheme = () => {
+      if (theme === 'system') {
+          setTheme('light');
+      } else if (theme === 'light') {
+          setTheme('dark');
+      } else {
+          setTheme('system');
+      }
+  };
+
+  const getThemeIcon = () => {
+      if (theme === 'light') return <Sun size={18} />;
+      if (theme === 'dark') return <Moon size={18} />;
+      return <span className="text-xs font-bold">Auto</span>;
+  };
+
   const handleUnlock = () => {
     setIsLocked(false);
-    // Decrypt data using the known password "123456"
-    // In a real app, the password would come from the modal input,
-    // but here we know the correct password is strictly '123456'.
     try {
         const bytesPhone = CryptoJS.AES.decrypt(resumeData.cn.hero.phone, '123456');
         const bytesEmail = CryptoJS.AES.decrypt(resumeData.cn.hero.email, '123456');
@@ -39,7 +81,6 @@ function App() {
     }
   };
 
-  // Helper to open details
   const openDetail = (content) => {
     setExpandedCard(content);
   };
@@ -55,6 +96,14 @@ function App() {
              Yan Yuqi <span className="text-[#2997ff]">.Pro</span>
           </span>
           <div className="flex items-center gap-6 text-xs font-medium">
+            <button
+               onClick={toggleTheme}
+               className="p-2 rounded-full hover:bg-[var(--color-surface-hover)] transition-colors text-[var(--color-text-primary)]"
+               title={`Current theme: ${theme}`}
+            >
+               {getThemeIcon()}
+            </button>
+            <div className="h-4 w-[1px] bg-[var(--color-text-secondary)]/20"></div>
             <button
               onClick={() => setLang('cn')}
               className={`transition-colors ${lang === 'cn' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}

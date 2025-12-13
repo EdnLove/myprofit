@@ -65,19 +65,24 @@ const TitaniumText = ({ text, isLocked, isDark }) => {
 const IdentityScene = ({ isLocked, text }) => {
   const [isDark, setIsDark] = useState(true);
 
-  // Detect theme change
+  // Detect theme change via DOM class for manual toggle support
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
 
-    const handler = (e) => setIsDark(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    checkTheme();
+    // Use a mutation observer to watch for class changes on html element
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
     <div className="w-full h-full min-h-[300px] relative cursor-grab active:cursor-grabbing">
-      <Canvas camera={{ position: [0, 0, 6], fov: 35 }}>
+      {/* Moved camera back from 6 to 10 to ensure text fits */}
+      <Canvas camera={{ position: [0, 0, 10], fov: 35 }}>
         {/* Studio Lighting - Adapts to Light/Dark slightly */}
         <Environment preset="studio" />
 
