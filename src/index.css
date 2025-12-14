@@ -1,18 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0c0c0c;
-  --color-surface: #161b22;
-  --color-surface-hover: #1f2428;
-  --color-accent: #238636;
-  --color-text-primary: #c9d1d9;
-  --color-text-secondary: #8b949e;
+  --color-bg: #000000;
+  --color-neon-green: #39ff14;
+  --color-neon-yellow: #fff01f;
+  --color-neon-magenta: #ff00ff;
 
-  --font-sans: "JetBrains Mono", monospace; /* Force Monospace globally */
+  --font-sans: "JetBrains Mono", monospace;
   --font-display: "JetBrains Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
-
-  --ease-terminal: cubic-bezier(0, 0, 0.2, 1);
 }
 
 :root {
@@ -23,29 +19,28 @@ body {
   margin: 0;
   background-color: var(--color-bg);
   font-family: var(--font-mono);
-  color: var(--color-text-primary);
+  color: #ffffff;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar (VS Code style) */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0c0c;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #30363d;
-  border-radius: 2px;
+  background: var(--color-neon-green);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #484f58;
+  background: var(--color-neon-yellow);
 }
 
-/* Global Selection */
 ::selection {
-  background: #264f78;
+  background: var(--color-neon-magenta);
   color: white;
 }
