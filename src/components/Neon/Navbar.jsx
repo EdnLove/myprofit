@@ -26,7 +26,7 @@ function Navbar({ activeSection, scrollToSection, labels, lang, setLang }) {
         })}
 
         {/* Language Toggle */}
-        <div className="flex items-center gap-2 border-l border-gray-600 pl-4 ml-4">
+        <div className="hidden items-center gap-2 border-l border-gray-600 pl-4 ml-4">
             <button
                 onClick={() => setLang('en')}
                 className={`transition-colors ${lang === 'en' ? 'text-[#ccff00]' : 'text-gray-500 hover:text-white'}`}
