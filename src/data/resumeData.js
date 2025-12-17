@@ -3,24 +3,20 @@ export const resumeData = {
     hero: {
       lockedTitle: "身份已加密",
       unlockedTitle: "颜予祺",
+      name: "颜予祺",
       role: "网络工程 | 全栈开发 | AI研究",
       unlockBtn: "点击解锁身份",
-      // Encrypted data (Phone: 18994094801, Email: 2058792558@qq.com)
-      // I am keeping the existing encrypted strings assuming they match the numbers.
-      // If not, I would need to re-encrypt. The previous turn logic had them hardcoded.
-      // 18994094801 -> U2FsdGVkX19LBg3g6P3EfSFxjbNeV7g3O4ojRZ6jtPI= (This was in previous file)
-      // 2058792558@qq.com -> U2FsdGVkX193uAnsLpUlcJaxmwCQPKTqS5DjvYFiTxEJ/6BVgDa5A8yfSMvtRO/d (This was in previous file)
-      phone: "U2FsdGVkX19LBg3g6P3EfSFxjbNeV7g3O4ojRZ6jtPI=",
-      email: "U2FsdGVkX193uAnsLpUlcJaxmwCQPKTqS5DjvYFiTxEJ/6BVgDa5A8yfSMvtRO/d"
+      phone: "18994094801",
+      email: "2058792558@qq.com"
     },
     sections: {
-      basic: "基本信息",
-      intro: "个人简介",
-      research: "科研经历",
-      competitions: "竞赛获奖",
-      ideology: "思想政治",
-      work: "工作与实践",
-      volunteer: "志愿服务"
+      hero: "首页",
+      about: "关于我",
+      skills: "技能",
+      work: "经历",
+      projects: "项目",
+      contact: "联系我",
+      resume: "简历"
     },
     basicInfo: {
       gender: "男",
@@ -34,17 +30,59 @@ export const resumeData = {
       {
         period: "2023.04 - 2024.09",
         title: "眼科模型建模 (江西省光电信息感知技术与仪器实验室)",
-        desc: "在方利华教授指导下，担任主要建模人员。与南昌大学附属眼科医院合作，构建毫米级人工晶状体、囊袋、圆锥角膜等90余个模型，负责制作与交付。"
+        desc: "在方利华教授指导下，担任主要建模人员。与南昌大学附属眼科医院合作，构建毫米级人工晶状体、囊袋、圆锥角膜等90余个模型，负责制作与交付。",
+        type: "research"
       },
       {
         period: "2024.11 - 至今",
         title: "时空智能研究团队 (RAG方向)",
-        desc: "参与聂云峰教授课题组，主要围绕人工智能领域的RAG（检索增强生成）方向开展系统性研究。打造“神州司鉴”平台，用检索增强生成技术助力司法鉴定。以第一作者身份完成JCR Q2论文《Accelerating Hybrid Retrieval for Large Language Models with a Decoupled Parallel RAG Strategy and Offline Pre-computation》（同行评审中）。"
+        desc: "参与聂云峰教授课题组，主要围绕人工智能领域的RAG（检索增强生成）方向开展系统性研究。打造“神州司鉴”平台，用检索增强生成技术助力司法鉴定。以第一作者身份完成JCR Q2论文《Accelerating Hybrid Retrieval for Large Language Models with a Decoupled Parallel RAG Strategy and Offline Pre-computation》（同行评审中）。",
+        type: "research"
       },
       {
         period: "成果转化",
         title: "专利与创业",
-        desc: "2025年3月主创“一种基于深度学习的动态自适应3D模型生成方法”获国家发明专利授权 (2024115398299)。2025年3月获软著“无人机桥梁巡检图像识别软件”授权 (2025SR0505203)。作为江西瞰勘科技有限公司联合创始人，打造“翼桥智检”项目，获互联网+校赛金奖、省赛银奖。"
+        desc: "2025年3月主创“一种基于深度学习的动态自适应3D模型生成方法”获国家发明专利授权 (2024115398299)。2025年3月获软著“无人机桥梁巡检图像识别软件”授权 (2025SR0505203)。作为江西瞰勘科技有限公司联合创始人，打造“翼桥智检”项目，获互联网+校赛金奖、省赛银奖。",
+        type: "research"
+      }
+    ],
+    // Merged timeline for the Work section (combining Research, Work, Volunteer to fill the timeline)
+    timeline: [
+      {
+        year: '2022',
+        period: '2022.09 - 2023.07',
+        title: '融媒体中心部委',
+        company: '南昌航空大学',
+        location: '南昌',
+        description: "负责公众号推送，参与策划、编辑、采访、剪辑视频。获评“优秀工作者”。",
+        pos: '10%'
+      },
+      {
+        year: '2023',
+        period: '2023.04 - 2024.09',
+        title: '眼科模型建模',
+        company: '光电信息实验室',
+        location: '南昌',
+        description: "构建毫米级人工晶状体、囊袋、圆锥角膜等90余个模型。",
+        pos: '36%'
+      },
+      {
+        year: '2023',
+        period: '2023.09 - 2024.09',
+        title: '融媒体中心部长',
+        company: '南昌航空大学',
+        location: '南昌',
+        description: "策划与统筹宣传内容，发表文章60余篇，参与数字课程录制。",
+        pos: '63%'
+      },
+      {
+        year: '2024',
+        period: '2024.11 - 至今',
+        title: 'RAG研究员',
+        company: '时空智能团队',
+        location: '南昌',
+        description: "打造“神州司鉴”平台，JCR Q2论文第一作者。",
+        pos: '90%'
       }
     ],
     competitions: {
@@ -99,25 +137,65 @@ export const resumeData = {
       "2023.09 2023秋季入学迎新志愿工作",
       "2022-2025 多次在江西省图书馆和南京市图书馆参加志愿活动",
       "累计志愿服务时长超过150小时"
+    ],
+    skills: {
+      left: [
+        { name: 'Python', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+        { name: 'JavaScript', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+        { name: 'Vue.js', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
+        { name: 'React', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+        { name: 'Node.js', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" }
+      ],
+      right: [
+        { name: 'HTML5', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+        { name: 'CSS3', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+        { name: 'MySQL', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+        { name: 'Git', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+        { name: 'Linux', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }
+      ]
+    },
+    projects: [
+      {
+        title: "神州司鉴",
+        description: "RAG司法鉴定平台 (Next.js + LLM)",
+        image: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+        logo: "AI",
+        color: "text-blue-200"
+      },
+      {
+        title: "翼桥智检",
+        description: "无人机桥梁巡检图像识别软件",
+        image: "linear-gradient(135deg, #a8ff78, #78ffd6)",
+        logo: "UAV",
+        color: "text-white"
+      },
+      {
+        title: "古物华章",
+        description: "全国计算机大赛国奖游戏作品",
+        image: "linear-gradient(135deg, #12c2e9, #c471ed, #f64f59)",
+        logo: "Game",
+        color: "text-pink-200"
+      }
     ]
   },
   en: {
     hero: {
       lockedTitle: "IDENTITY ENCRYPTED",
       unlockedTitle: "YAN YUQI",
+      name: "YAN YUQI",
       role: "Network Engineering | Full Stack | AI Research",
       unlockBtn: "UNLOCK IDENTITY",
-      phone: "U2FsdGVkX19LBg3g6P3EfSFxjbNeV7g3O4ojRZ6jtPI=",
-      email: "U2FsdGVkX193uAnsLpUlcJaxmwCQPKTqS5DjvYFiTxEJ/6BVgDa5A8yfSMvtRO/d"
+      phone: "18994094801",
+      email: "2058792558@qq.com"
     },
     sections: {
-      basic: "Basic Info",
-      intro: "Introduction",
-      research: "Research",
-      competitions: "Awards",
-      ideology: "Ideology",
-      work: "Experience",
-      volunteer: "Volunteering"
+      hero: "HOME",
+      about: "ABOUT",
+      skills: "SKILLS",
+      work: "WORK",
+      projects: "PROJECTS",
+      contact: "CONTACT",
+      resume: "RESUME"
     },
     basicInfo: {
       gender: "Male",
@@ -142,6 +220,44 @@ export const resumeData = {
         period: "Commercialization",
         title: "Patents & Startups",
         desc: "Authorized Invention Patent (Mar 2025): 'A Dynamic Adaptive 3D Model Generation Method Based on Deep Learning' (2024115398299). Software Copyright (Mar 2025): 'UAV Bridge Inspection Image Recognition Software' (2025SR0505203). Co-founder of Jiangxi Kankan Tech, creating the 'Yiqiao Intelligent Inspection' project (Internet+ Gold/Silver awards)."
+      }
+    ],
+    timeline: [
+      {
+        year: '2022',
+        period: 'Sep 2022 - Jul 2023',
+        title: 'Media Center Member',
+        company: 'Nanchang Hangkong Univ',
+        location: 'Nanchang',
+        description: "Managed WeChat account, planned content, edited videos. Awarded 'Outstanding Worker'.",
+        pos: '10%'
+      },
+      {
+        year: '2023',
+        period: 'Apr 2023 - Sep 2024',
+        title: 'Ophthalmic Modeling',
+        company: 'Optoelectronic Lab',
+        location: 'Nanchang',
+        description: "Built 90+ millimeter-level eye models for medical use.",
+        pos: '36%'
+      },
+      {
+        year: '2023',
+        period: 'Sep 2023 - Sep 2024',
+        title: 'Media Center Minister',
+        company: 'Nanchang Hangkong Univ',
+        location: 'Nanchang',
+        description: "Coordinated publicity, published 60+ articles, recorded digital courses.",
+        pos: '63%'
+      },
+      {
+        year: '2024',
+        period: 'Nov 2024 - Present',
+        title: 'RAG Researcher',
+        company: 'Spatiotemporal Team',
+        location: 'Nanchang',
+        description: "Building 'Shenzhou Forensic' platform, 1st author of JCR Q2 paper.",
+        pos: '90%'
       }
     ],
     competitions: {
@@ -196,6 +312,45 @@ export const resumeData = {
       "2023.09 2023 Autumn Welcome Volunteer",
       "2022-2025 Volunteer at Jiangxi Provincial Library & Nanjing Library",
       "Accumulated over 150 hours of volunteer service"
+    ],
+    skills: {
+      left: [
+        { name: 'Python', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+        { name: 'JavaScript', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+        { name: 'Vue.js', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
+        { name: 'React', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+        { name: 'Node.js', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" }
+      ],
+      right: [
+        { name: 'HTML5', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+        { name: 'CSS3', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+        { name: 'MySQL', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+        { name: 'Git', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+        { name: 'Linux', url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }
+      ]
+    },
+    projects: [
+      {
+        title: "Shenzhou Forensic",
+        description: "RAG Forensic Platform (Next.js + LLM)",
+        image: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+        logo: "AI",
+        color: "text-blue-200"
+      },
+      {
+        title: "Yiqiao",
+        description: "UAV Bridge Inspection Software",
+        image: "linear-gradient(135deg, #a8ff78, #78ffd6)",
+        logo: "UAV",
+        color: "text-white"
+      },
+      {
+        title: "Guwu Huazhang",
+        description: "National Award Winning Game",
+        image: "linear-gradient(135deg, #12c2e9, #c471ed, #f64f59)",
+        logo: "Game",
+        color: "text-pink-200"
+      }
     ]
   }
 };

@@ -8,7 +8,7 @@
   --color-text-primary: #c9d1d9;
   --color-text-secondary: #8b949e;
 
-  --font-sans: "JetBrains Mono", monospace; /* Force Monospace globally */
+  --font-sans: "JetBrains Mono", monospace;
   --font-display: "JetBrains Mono", monospace;
   --font-mono: "JetBrains Mono", monospace;
 
@@ -29,23 +29,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar (VS Code style) */
-::-webkit-scrollbar {
-  width: 10px;
+/* Custom Neon Styles */
+.neon-text {
+  text-shadow: 0 0 10px rgba(204, 255, 0, 0.5), 0 0 20px rgba(204, 255, 0, 0.3);
 }
-::-webkit-scrollbar-track {
-  background: #0c0c0c;
+.neon-box {
+  box-shadow: 0 0 20px rgba(88, 88, 255, 0.15), inset 0 0 20px rgba(88, 88, 255, 0.05);
 }
-::-webkit-scrollbar-thumb {
-  background: #30363d;
-  border-radius: 2px;
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #484f58;
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* Global Selection */
-::selection {
-  background: #264f78;
-  color: white;
+/* Strong Neon Line Effect */
+.neon-line-active {
+  box-shadow: 0 0 10px 2px #ccff00, 0 0 20px 4px rgba(204, 255, 0, 0.5);
+}
+.neon-dot-active {
+  box-shadow: 0 0 15px 3px #ccff00, 0 0 30px 6px rgba(204, 255, 0, 0.5);
+}
+/* Cursor Blink Animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-cursor {
+  animation: blink 1s step-end infinite;
 }
