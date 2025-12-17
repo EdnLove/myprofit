@@ -10,6 +10,7 @@ import ProjectsSection from './components/Neon/ProjectsSection';
 import ContactSection from './components/Neon/ContactSection';
 import Navbar from './components/Neon/Navbar';
 import ScrollDots from './components/Neon/ScrollDots';
+import IntroScreen from './components/Neon/IntroScreen';
 
 /**
  * 缓动函数
@@ -26,11 +27,28 @@ function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeSection, setActiveSection] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+
+  // Intro Screen State
+  const [showIntro, setShowIntro] = useState(true);
+
   const scrollContainerRef = useRef(null);
   const touchStartY = useRef(0);
 
   const SECTIONS = ['hero', 'about', 'skills', 'work', 'projects', 'contact'];
   const currentData = resumeData[lang];
+
+  useEffect(() => {
+    // Check session storage for previous visit
+    const hasVisited = sessionStorage.getItem('hasVisitedPortfolio');
+    if (hasVisited) {
+      setShowIntro(false);
+    }
+  }, []);
+
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
+    sessionStorage.setItem('hasVisitedPortfolio', 'true');
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -130,54 +148,60 @@ function App() {
 
   return (
     <div className="h-screen w-full bg-[#050505] text-gray-300 font-mono relative overflow-hidden selection:bg-[#ccff00] selection:text-black">
-      <div
-        className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(204, 255, 0, 0.06), transparent 80%)`
-        }}
-      />
 
-      <Navbar
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-        labels={currentData}
-        lang={lang}
-        setLang={setLang}
-      />
+      {/* Intro Screen */}
+      {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
 
-      <ScrollDots
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-        totalSections={SECTIONS.length}
-      />
+      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+        <div
+          className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(204, 255, 0, 0.06), transparent 80%)`
+          }}
+        />
 
-      <main ref={scrollContainerRef} className="h-full w-full overflow-hidden relative z-10">
-        <HeroSection
-            scrollToContact={() => scrollToSection(5)}
-            scrollToAbout={() => scrollToSection(1)}
-            data={currentData.hero}
+        <Navbar
+          activeSection={activeSection}
+          scrollToSection={scrollToSection}
+          labels={currentData}
+          lang={lang}
+          setLang={setLang}
         />
-        <AboutSection
-            data={currentData}
-            labels={currentData.sections}
+
+        <ScrollDots
+          activeSection={activeSection}
+          scrollToSection={scrollToSection}
+          totalSections={SECTIONS.length}
         />
-        <SkillsSection
-            data={currentData}
-            labels={currentData.sections}
-        />
-        <WorkSection
-            data={currentData}
-            labels={currentData.sections}
-        />
-        <ProjectsSection
-            data={currentData}
-            labels={currentData.sections}
-        />
-        <ContactSection
-            data={currentData}
-            labels={currentData.sections}
-        />
-      </main>
+
+        <main ref={scrollContainerRef} className="h-full w-full overflow-hidden relative z-10">
+          <HeroSection
+              scrollToContact={() => scrollToSection(5)}
+              scrollToAbout={() => scrollToSection(1)}
+              data={currentData.hero}
+          />
+          <AboutSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <SkillsSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <WorkSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <ProjectsSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <ContactSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+        </main>
+      </div>
     </div>
   );
 }
