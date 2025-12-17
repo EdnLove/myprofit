@@ -152,7 +152,7 @@ function App() {
       {/* Intro Screen */}
       {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
 
-      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`h-full transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
         <div
           className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
           style={{

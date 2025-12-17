@@ -64,7 +64,29 @@ body {
 .terminal-text {
   text-shadow: 0 0 5px rgba(204, 255, 0, 0.8);
 }
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease-out;
+}
 
+/* Animation Utilities to match user request */
+@keyframes enter {
+  from { opacity: 0; transform: translateY(var(--tw-enter-translate-y, 0)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: enter 0.1s ease-out forwards;
+}
+.fade-in {
+  --tw-enter-opacity: 0;
+}
+.slide-in-from-bottom-1 {
+  --tw-enter-translate-y: 0.25rem;
+}
+
+/* Fallback/Legacy */
 @keyframes slideUpFade {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }

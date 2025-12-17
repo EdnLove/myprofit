@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SkipForward } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 /**
  * INTRO SCREEN COMPONENT
@@ -141,7 +141,7 @@ const IntroScreen = ({ onComplete }) => {
         onClick={handleSkip}
         className="absolute top-8 right-8 flex items-center gap-2 text-xs md:text-sm text-gray-500 hover:text-[#ccff00] transition-colors border border-transparent hover:border-[#ccff00] px-4 py-2 rounded z-50"
       >
-        SKIP_BOOT <SkipForward size={14} />
+        SKIP_BOOT <ChevronRight size={14} />
       </button>
 
       {/* 沉浸式终端容器 */}
@@ -151,7 +151,7 @@ const IntroScreen = ({ onComplete }) => {
             className="space-y-2 text-sm md:text-lg font-mono h-[400px] overflow-y-auto no-scrollbar"
         >
           {lines.map((line) => (
-            <div key={line.id} className="flex gap-4 animate-slide-up">
+            <div key={line.id} className="flex gap-4 animate-in fade-in slide-in-from-bottom-1 duration-100">
               <span className="text-gray-600 select-none shrink-0 font-light">[{line.time}]</span>
               <span className="terminal-text text-gray-300">
                 {line.text.startsWith('[ OK ]') ? (
