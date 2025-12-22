@@ -22,10 +22,10 @@ export const resumeData = {
       gender: "男",
       major: "网络工程 (080903)",
       college: "南昌航空大学信息工程学院",
-      gpa: "平均学分绩 90.06 (专业排名 3/94)",
+      gpa: "平均学分绩 90.06 (专业排名 1/94)",
       honors: ["南昌航空大学奖学金 (2023.11, 2024.11)", "优秀三好学生 (2024.11)"]
     },
-    introText: "我是南昌航空大学信息工程学院网络工程专业22级本科生，学号：22224221。在校学习了网页移动应用开发，Web编程基础，数字逻辑，高级数据库等专业课。我第一学期至第六学期，课程平均学分绩为90.06，专业排名第3（总人数94）。我在校期间始终秉持“日新自强，知行合一”的校训精神，坚持德智体美劳全面发展。",
+    introText: "我是南昌航空大学信息工程学院网络工程专业22级本科生。在校学习了网页移动应用开发，Web编程基础，数字逻辑，高级数据库等专业课。我第一学期至第六学期，课程平均学分绩为90.06，专业排名第1（总人数94）。我在校期间始终秉持“日新自强，知行合一”的校训精神，坚持德智体美劳全面发展。",
     research: [
       {
         period: "2023.04 - 2024.09",
@@ -201,10 +201,10 @@ export const resumeData = {
       gender: "Male",
       major: "Network Engineering (080903)",
       college: "School of Information Engineering, Nanchang Hangkong University",
-      gpa: "Avg GPA 90.06 (Rank 3/94)",
+      gpa: "Avg GPA 90.06 (Rank 1/94)",
       honors: ["University Scholarship (Nov 2023, Nov 2024)", "Outstanding Student (Nov 2024)"]
     },
-    introText: "I am a 2022 undergraduate student majoring in Network Engineering at Nanchang Hangkong University (Student ID: 22224221). I have studied Web Mobile App Development, Web Programming, Digital Logic, Advanced Databases, and more. From my 1st to 6th semester, my average GPA is 90.06, ranking 3rd out of 94 students in the major. I adhere to the university motto of 'Daily Renewal, Unity of Knowledge and Action'.",
+    introText: "I am a 2022 undergraduate student majoring in Network Engineering at Nanchang Hangkong University. I have studied Web Mobile App Development, Web Programming, Digital Logic, Advanced Databases, and more. From my 1st to 6th semester, my average GPA is 90.06, ranking 1st out of 94 students in the major. I adhere to the university motto of 'Daily Renewal, Unity of Knowledge and Action'.",
     research: [
       {
         period: "2023.04 - 2024.09",
