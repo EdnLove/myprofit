@@ -1,173 +1,208 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { resumeData } from './data/resumeData';
-import Sidebar from './components/Sidebar';
-import TabManager from './components/TabManager';
-import EditorWindow from './components/EditorWindow';
-import TerminalIntro from './components/TerminalIntro';
-import VerificationModal from './components/VerificationModal';
-import { Terminal, Settings, GitBranch, Bell } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import CryptoJS from 'crypto-js';
+
+// Components
+import HeroSection from './components/Neon/HeroSection';
+import AboutSection from './components/Neon/AboutSection';
+import SkillsSection from './components/Neon/SkillsSection';
+import WorkSection from './components/Neon/WorkSection';
+import ProjectsSection from './components/Neon/ProjectsSection';
+import ContactSection from './components/Neon/ContactSection';
+import Navbar from './components/Neon/Navbar';
+import ScrollDots from './components/Neon/ScrollDots';
+import IntroScreen from './components/Neon/IntroScreen';
+
+/**
+ * 缓动函数
+ */
+const easeInOutCubic = (t, b, c, d) => {
+  t /= d / 2;
+  if (t < 1) return c / 2 * t * t * t + b;
+  t -= 2;
+  return c / 2 * (t * t * t + 2) + b;
+};
 
 function App() {
-  const [showIntro, setShowIntro] = useState(true);
   const [lang, setLang] = useState('en');
-  const [activeFile, setActiveFile] = useState('README.md');
-  const [openFiles, setOpenFiles] = useState(['README.md']);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeSection, setActiveSection] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
-  // Security State
-  const [isLocked, setIsLocked] = useState(true);
-  const [showUnlockModal, setShowUnlockModal] = useState(false);
-  const [decryptedContacts, setDecryptedContacts] = useState({ phone: '', email: '' });
+  // Intro Screen State
+  const [showIntro, setShowIntro] = useState(true);
 
-  const handleUnlock = () => {
-    try {
-        // Using '123456' as the password as per previous context
-        const bytesPhone = CryptoJS.AES.decrypt(resumeData.cn.hero.phone, '123456');
-        const bytesEmail = CryptoJS.AES.decrypt(resumeData.cn.hero.email, '123456');
-        const phone = bytesPhone.toString(CryptoJS.enc.Utf8);
-        const email = bytesEmail.toString(CryptoJS.enc.Utf8);
+  const scrollContainerRef = useRef(null);
+  const touchStartY = useRef(0);
 
-        if (phone && email) {
-            setDecryptedContacts({ phone, email });
-            setIsLocked(false);
-            setShowUnlockModal(false);
-        } else {
-            alert('Decryption error');
-        }
-    } catch (e) {
-        console.error("Decryption failed", e);
+  const SECTIONS = ['hero', 'about', 'skills', 'work', 'projects', 'contact'];
+  const currentData = resumeData[lang];
+
+  useEffect(() => {
+    // Check session storage for previous visit
+    const hasVisited = sessionStorage.getItem('hasVisitedPortfolio');
+    if (hasVisited) {
+      setShowIntro(false);
     }
-  };
+  }, []);
 
-  const handleFileSelect = (file) => {
-    if (!openFiles.includes(file)) {
-      setOpenFiles([...openFiles, file]);
-    }
-    setActiveFile(file);
-  };
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
+    sessionStorage.setItem('hasVisitedPortfolio', 'true');
+  }, []);
 
-  const handleTabClose = (file) => {
-    const newOpen = openFiles.filter(f => f !== file);
-    setOpenFiles(newOpen);
-    if (activeFile === file && newOpen.length > 0) {
-      setActiveFile(newOpen[newOpen.length - 1]);
-    } else if (newOpen.length === 0) {
-      setActiveFile(null);
-    }
-  };
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const scrollToSection = useCallback((targetIndex, duration = 1000) => {
+    const container = scrollContainerRef.current;
+    if (!container || targetIndex < 0 || targetIndex >= SECTIONS.length) return;
+
+    const targetSection = document.getElementById(SECTIONS[targetIndex]);
+    if (!targetSection) return;
+
+    const startPosition = container.scrollTop;
+    const targetPosition = targetSection.offsetTop;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+
+    setIsScrolling(true);
+    setActiveSection(targetIndex);
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const run = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+      container.scrollTop = run;
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      } else {
+        container.scrollTop = targetPosition;
+        setIsScrolling(false);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  }, [SECTIONS]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      if (isScrolling) return;
+      const direction = e.deltaY > 0 ? 1 : -1;
+      scrollToSection(activeSection + direction);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [activeSection, isScrolling, scrollToSection]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleTouchStart = (e) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (isScrolling) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diff = touchStartY.current - touchEndY;
+      if (Math.abs(diff) > 50) {
+        const direction = diff > 0 ? 1 : -1;
+        scrollToSection(activeSection + direction);
+      }
+    };
+
+    container.addEventListener('touchstart', handleTouchStart);
+    container.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeSection, isScrolling, scrollToSection]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isScrolling) return;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        scrollToSection(activeSection + 1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        scrollToSection(activeSection - 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeSection, isScrolling, scrollToSection]);
 
   return (
-    <>
-      <AnimatePresence>
-        {showIntro && (
-          <motion.div exit={{ opacity: 0 }} className="fixed inset-0 z-[100]">
-             <TerminalIntro onComplete={() => setShowIntro(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="h-screen w-full bg-[#050505] text-gray-300 font-mono relative overflow-hidden selection:bg-[#ccff00] selection:text-black">
 
-      <div className="h-screen flex flex-col bg-[#0d1117] text-gray-300 overflow-hidden font-sans">
+      {/* Intro Screen */}
+      {showIntro && <IntroScreen onComplete={handleIntroComplete} />}
 
-        {/* Top Status Bar (VS Code Style) */}
-        <div className="h-8 bg-[#161b22] border-b border-[#30363d] flex items-center justify-between px-3 select-none">
-           <div className="flex items-center gap-4 text-xs">
-              <span className="font-bold text-blue-400">File</span>
-              <span>Edit</span>
-              <span>Selection</span>
-              <span>View</span>
-              <span>Go</span>
-              <span>Run</span>
-              <span>Terminal</span>
-              <span>Help</span>
-           </div>
-           <div className="text-xs text-gray-500 font-mono">
-              Yan Yuqi - Portfolio Workspace
-           </div>
-        </div>
+      <div className={`h-full transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+        <div
+          className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(204, 255, 0, 0.06), transparent 80%)`
+          }}
+        />
 
-        {/* Main Workspace */}
-        <div className="flex-1 flex overflow-hidden">
+        <Navbar
+          activeSection={activeSection}
+          scrollToSection={scrollToSection}
+          labels={currentData}
+          lang={lang}
+          setLang={setLang}
+        />
 
-           {/* Activity Bar (Leftmost icons) */}
-           <div className="w-12 bg-[#0d1117] border-r border-[#30363d] flex flex-col items-center py-4 gap-6">
-              <div className="p-2 cursor-pointer text-white border-l-2 border-[#f78166]"><Terminal size={24} /></div>
-              <div className="p-2 cursor-pointer text-gray-500 hover:text-white"><GitBranch size={24} /></div>
-              <div className="mt-auto p-2 cursor-pointer text-gray-500 hover:text-white"><Settings size={24} /></div>
-           </div>
+        <ScrollDots
+          activeSection={activeSection}
+          scrollToSection={scrollToSection}
+          totalSections={SECTIONS.length}
+        />
 
-           {/* Sidebar (File Explorer) */}
-           <Sidebar activeFile={activeFile} onFileSelect={handleFileSelect} />
-
-           {/* Editor Area */}
-           <div className="flex-1 flex flex-col min-w-0 bg-[#010409]">
-              {openFiles.length > 0 ? (
-                <>
-                  <TabManager
-                    openFiles={openFiles}
-                    activeFile={activeFile}
-                    onTabClick={setActiveFile}
-                    onTabClose={handleTabClose}
-                  />
-                  <div className="flex-1 relative overflow-hidden">
-                     {/* Breadcrumbs */}
-                     <div className="h-6 bg-[#010409] flex items-center px-4 text-xs text-gray-500 border-b border-[#30363d]">
-                        src &gt; pages &gt; {activeFile}
-                     </div>
-
-                     <EditorWindow
-                        activeFile={activeFile}
-                        data={resumeData}
-                        lang={lang}
-                        isLocked={isLocked}
-                        onUnlock={() => setShowUnlockModal(true)}
-                        decryptedContacts={decryptedContacts}
-                     />
-                  </div>
-                </>
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-gray-600">
-                   <div className="mb-4 text-gray-700"><Terminal size={64} /></div>
-                   <p>No files open</p>
-                   <p className="text-xs mt-2">Open a file from the explorer to view details.</p>
-                </div>
-              )}
-           </div>
-        </div>
-
-        {/* Bottom Status Bar */}
-        <div className="h-6 bg-[#161b22] border-t border-[#30363d] flex items-center justify-between px-3 text-[10px] select-none text-white">
-            <div className="flex items-center gap-3">
-               <div className="flex items-center gap-1 bg-[#238636] px-2 h-full">
-                  <GitBranch size={10} />
-                  <span>main*</span>
-               </div>
-               <div className="flex items-center gap-1">
-                  <span>0 errors</span>
-                  <span>0 warnings</span>
-               </div>
-            </div>
-            <div className="flex items-center gap-4">
-               <div className="flex gap-2">
-                 <button onClick={() => setLang('en')} className={lang === 'en' ? 'text-white' : 'text-gray-500'}>ENG</button>
-                 <button onClick={() => setLang('cn')} className={lang === 'cn' ? 'text-white' : 'text-gray-500'}>CHN</button>
-               </div>
-               <span>Ln 1, Col 1</span>
-               <span>UTF-8</span>
-               <span>JavaScript React</span>
-               <Bell size={10} />
-            </div>
-        </div>
-
+        <main ref={scrollContainerRef} className="h-full w-full overflow-hidden relative z-10">
+          <HeroSection
+              scrollToContact={() => scrollToSection(5)}
+              scrollToAbout={() => scrollToSection(1)}
+              data={currentData.hero}
+          />
+          <AboutSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <SkillsSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <WorkSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <ProjectsSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+          <ContactSection
+              data={currentData}
+              labels={currentData.sections}
+          />
+        </main>
       </div>
-
-      <VerificationModal
-        isOpen={showUnlockModal}
-        onClose={() => setShowUnlockModal(false)}
-        onUnlock={handleUnlock}
-        lang={lang}
-      />
-    </>
+    </div>
   );
 }
 
