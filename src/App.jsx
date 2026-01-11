@@ -11,7 +11,7 @@ import CryptoJS from 'crypto-js';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
-  const [lang, setLang] = useState('en');
+  const [lang] = useState('en');
   const [activeFile, setActiveFile] = useState('README.md');
   const [openFiles, setOpenFiles] = useState(['README.md']);
 
@@ -149,8 +149,7 @@ function App() {
             </div>
             <div className="flex items-center gap-4">
                <div className="flex gap-2">
-                 <button onClick={() => setLang('en')} className={lang === 'en' ? 'text-white' : 'text-gray-500'}>ENG</button>
-                 <button onClick={() => setLang('cn')} className={lang === 'cn' ? 'text-white' : 'text-gray-500'}>CHN</button>
+                 <span className="text-white">ENG</span>
                </div>
                <span>Ln 1, Col 1</span>
                <span>UTF-8</span>

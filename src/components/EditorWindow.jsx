@@ -11,6 +11,17 @@ const generateContent = (file, data, lang) => {
     return JSON.stringify(t.research, null, 2);
   }
 
+  if (file === 'projects.json') {
+    return JSON.stringify(t.projects || [], null, 2);
+  }
+
+  if (file === 'ip.md') {
+    const items = (t.intellectualProperty || []).map((item) => `- ${item}`).join('\n');
+    const title = lang === 'cn' ? '知识产权与成果' : 'Intellectual Property';
+    const empty = lang === 'cn' ? '- 暂无数据' : '- No data available';
+    return `# ${title}\n\n${items || empty}`;
+  }
+
   if (file === 'awards.yaml') {
     let content = `# Awards & Competitions\n\n`;
     content += `National:\n`;
@@ -33,6 +44,58 @@ const generateContent = (file, data, lang) => {
   }
 
   if (file === 'intro.md' || file === 'README.md') {
+    if (lang === 'cn') {
+      const education = (t.education || [])
+        .map((item) => (
+          `- ${item.school}${item.minor ? `｜${item.minor}` : ''}\n` +
+          `  - 主修课程：${item.courses}\n` +
+          `  - 学业成绩：${item.gpa}\n` +
+          `  - 奖项荣誉：${item.honors.join('、')}`
+        ))
+        .join('\n');
+      const skills = (t.skills || []).map((item) => `- ${item}`).join('\n');
+      const work = (t.work || []).map((item) => `- ${item.title}\n  - ${item.desc}`).join('\n');
+      const projects = (t.projects || t.research || [])
+        .map((item) => `- ${item.title}（${item.period}）\n  - ${item.desc}`)
+        .join('\n');
+      const ip = (t.intellectualProperty || []).map((item) => `- ${item}`).join('\n');
+      const orgs = (t.organizations || []).map((item) => `- ${item}`).join('\n');
+      const selfEval = (t.selfEvaluation || []).map((item) => `- ${item}`).join('\n');
+
+      return [
+        `# ${t.sections.intro}`,
+        ``,
+        t.introText,
+        ``,
+        `## 基本信息`,
+        `- 姓名：${t.basicInfo.name}`,
+        `- 方向：${t.basicInfo.direction}`,
+        `- 性别：${t.basicInfo.gender}`,
+        `- 邮箱：${t.basicInfo.email}`,
+        ``,
+        `## 教育背景`,
+        education,
+        ``,
+        `## 技术能力`,
+        skills,
+        ``,
+        `## 工作 / 实习经历`,
+        work,
+        ``,
+        `## 科研与项目经历`,
+        projects,
+        ``,
+        `## 知识产权与成果`,
+        ip,
+        ``,
+        `## 组织与实践经历`,
+        orgs,
+        ``,
+        `## 自我评价`,
+        selfEval
+      ].filter(Boolean).join('\n');
+    }
+
     return `# ${t.sections.intro}\n\n${t.introText}\n\n## Basic Info\n- Major: ${t.basicInfo.major}\n- GPA: ${t.basicInfo.gpa}\n- Honors: ${t.basicInfo.honors.join(', ')}`;
   }
 
