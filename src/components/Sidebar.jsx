@@ -72,9 +72,21 @@ const Sidebar = ({ activeFile, onFileSelect }) => {
                 depth={2}
               />
               <FileItem
+                name="projects.json"
+                active={activeFile === 'projects.json'}
+                onClick={() => onFileSelect('projects.json')}
+                depth={2}
+              />
+              <FileItem
                 name="awards.yaml"
                 active={activeFile === 'awards.yaml'}
                 onClick={() => onFileSelect('awards.yaml')}
+                depth={2}
+              />
+              <FileItem
+                name="ip.md"
+                active={activeFile === 'ip.md'}
+                onClick={() => onFileSelect('ip.md')}
                 depth={2}
               />
               <FileItem
